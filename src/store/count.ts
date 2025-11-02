@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   combine,
   createJSONStorage,
+  devtools,
   persist,
   subscribeWithSelector,
 } from "zustand/middleware";
@@ -118,27 +119,30 @@ const initialState = {
   count: 0,
 };
 export const useCounterStore = create(
-  persist(
-    subscribeWithSelector(
-      immer(
-        combine(initialState, (set, get) => ({
-          actions: {
-            increase: () => {
-              set((state) => {
-                state.count += 1;
-              });
+  devtools(
+    persist(
+      subscribeWithSelector(
+        immer(
+          combine(initialState, (set, get) => ({
+            actions: {
+              increase: () => {
+                set((state) => {
+                  state.count += 1;
+                });
+              },
             },
-          },
-        })),
+          })),
+        ),
       ),
+      {
+        name: "counter",
+        partialize: (state) => ({
+          count: state.count,
+        }),
+        storage: createJSONStorage(() => sessionStorage),
+      },
     ),
-    {
-      name: "counter",
-      partialize: (state) => ({
-        count: state.count,
-      }),
-      storage: createJSONStorage(() => sessionStorage),
-    },
+    { name: "counter" },
   ),
 );
 
