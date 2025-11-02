@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 // type TCounterStore = {
 //   count: number;
@@ -27,24 +28,47 @@ import { combine } from "zustand/middleware";
 // }));
 
 // 미들웨어 combine
+// const initialState = {
+//   count: 0,
+// };
+// export const useCounterStore = create(
+//   combine(initialState, (set, get) => ({
+//     actions: {
+//       increase: () => {
+//         set((state) => ({
+//           count: state.count + 1,
+//         }));
+//       },
+//       decrease: () => {
+//         set((state) => ({
+//           count: state.count - 1,
+//         }));
+//       },
+//     },
+//   })),
+// );
+
+// 미들웨어 immer + combine
 const initialState = {
   count: 0,
 };
 export const useCounterStore = create(
-  combine(initialState, (set, get) => ({
-    actions: {
-      increase: () => {
-        set((state) => ({
-          count: state.count + 1,
-        }));
+  immer(
+    combine(initialState, (set, get) => ({
+      actions: {
+        increase: () => {
+          set((state) => {
+            state.count += 1;
+          });
+        },
+        decrease: () => {
+          set((state) => {
+            state.count -= 1;
+          });
+        },
       },
-      decrease: () => {
-        set((state) => ({
-          count: state.count - 1,
-        }));
-      },
-    },
-  })),
+    })),
+  ),
 );
 
 export const useCounterCount = () => {
