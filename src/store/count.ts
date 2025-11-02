@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { combine, subscribeWithSelector } from "zustand/middleware";
+import {
+  combine,
+  createJSONStorage,
+  persist,
+  subscribeWithSelector,
+} from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 // type TCounterStore = {
@@ -71,41 +76,70 @@ import { immer } from "zustand/middleware/immer";
 //   ),
 // );
 
-// 미들웨어: subscribeWithSelector + immer + combine
+// // 미들웨어: subscribeWithSelector + immer + combine
+// const initialState = {
+//   count: 0,
+// };
+// export const useCounterStore = create(
+//   subscribeWithSelector(
+//     immer(
+//       combine(initialState, (set, get) => ({
+//         actions: {
+//           increase: () => {
+//             set((state) => {
+//               state.count += 1;
+//             });
+//           },
+//           decrease: () => {
+//             set((state) => {
+//               state.count -= 1;
+//             });
+//           },
+//         },
+//       })),
+//     ),
+//   ),
+// );
+
+// useCounterStore.subscribe(
+//   // 셀렉터
+//   (store) => store.count,
+//   // 리스너
+//   (count, prevCount) => {
+//     const store = useCounterStore.getState();
+//     // useCounterStore.setState({
+//     //   count:count+1
+//     // })
+//   },
+// );
+
+// 미들웨어: persist + subscribeWithSelector + immer + combine
 const initialState = {
   count: 0,
 };
 export const useCounterStore = create(
-  subscribeWithSelector(
-    immer(
-      combine(initialState, (set, get) => ({
-        actions: {
-          increase: () => {
-            set((state) => {
-              state.count += 1;
-            });
+  persist(
+    subscribeWithSelector(
+      immer(
+        combine(initialState, (set, get) => ({
+          actions: {
+            increase: () => {
+              set((state) => {
+                state.count += 1;
+              });
+            },
           },
-          decrease: () => {
-            set((state) => {
-              state.count -= 1;
-            });
-          },
-        },
-      })),
+        })),
+      ),
     ),
+    {
+      name: "counter",
+      partialize: (state) => ({
+        count: state.count,
+      }),
+      storage: createJSONStorage(() => sessionStorage),
+    },
   ),
-);
-
-useCounterStore.subscribe(
-  // 셀렉터
-  (store) => store.count,
-  // 리스너
-  (count, prevCount) => {
-    const store = useCounterStore.getState();
-    // useCounterStore.setState({
-    //   count:count+1
-    // })
-  },
 );
 
 export const useCounterCount = () => {
