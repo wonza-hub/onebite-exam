@@ -24,3 +24,11 @@ export const useCounterStore = create<TCounterStore>((set, get) => ({
     },
   },
 }));
+
+export const useCounterCount = () => {
+  return useCounterStore((store) => store.count);
+};
+
+export const useCounterActions = () => {
+  return useCounterStore((store) => store.actions);
+};

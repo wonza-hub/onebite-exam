@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import { useCounterStore } from "@/store/count";
+import { useCounterActions } from "@/store/count";
 
 export default function CounterController() {
   //   const { increase, decrease } = useCounterStore();
@@ -9,7 +9,10 @@ export default function CounterController() {
   //   const decrease = useCounterStore((store) => store.decrease);
 
   // 액션 함수 가져오기
-  const { increase, decrease } = useCounterStore((store) => store.actions);
+  // const { increase, decrease } = useCounterStore((store) => store.actions);
+
+  // 스토어의 커스텀 훅 가져오기
+  const { increase, decrease } = useCounterActions();
 
   return (
     <div>
