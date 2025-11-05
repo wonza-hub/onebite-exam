@@ -5,6 +5,7 @@ import SignInPage from "./pages/signin-page";
 import SignUpPage from "./pages/signup-page";
 import CounterPage from "./pages/counter-page";
 import TodoListPage from "./pages/todo-list-page";
+import TodoDetailPage from "./pages/todo-detail-page";
 
 const AuthLayout = () => {
   return (
@@ -20,6 +21,7 @@ export default function App() {
       <Route path="/" element={<IndexPage />} />
       <Route path="/counter" element={<CounterPage />} />
       <Route path="/todolist" element={<TodoListPage />} />
+      <Route path="/todolist/:id" element={<TodoDetailPage />} />
       <Route element={<AuthLayout />}>
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
