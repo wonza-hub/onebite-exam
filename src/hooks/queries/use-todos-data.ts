@@ -1,9 +1,10 @@
 import { fetchTodos } from "@/api/fetch-todos";
 import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/constants";
 
 export function useTodosData() {
   return useQuery({
-    queryKey: ["todos"],
+    queryKey: QUERY_KEYS.todo.all,
     queryFn: fetchTodos,
   });
 }
