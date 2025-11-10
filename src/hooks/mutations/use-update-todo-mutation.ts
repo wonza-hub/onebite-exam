@@ -11,7 +11,11 @@ export function useUpdateTodoMutation() {
 
   return useMutation({
     mutationFn: updateTodo,
-    onMutate: (updatedTodo) => {
+    onMutate: async (updatedTodo) => {
+      await queryClient.cancelQueries({
+        queryKey: QUERY_KEYS.todo.list,
+      });
+
       const prevTodos = queryClient.getQueryData<ITodo[]>(QUERY_KEYS.todo.list);
       queryClient.setQueryData<ITodo[]>(QUERY_KEYS.todo.list, (prevTodos) => {
         if (!prevTodos) {
@@ -36,6 +40,11 @@ export function useUpdateTodoMutation() {
           context.prevTodos,
         );
       }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.todo.list,
+      });
     },
   });
 }
