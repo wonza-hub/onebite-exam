@@ -4,7 +4,7 @@ import { QUERY_KEYS } from "@/lib/constants";
 
 export function useTodosData() {
   return useQuery({
-    queryKey: QUERY_KEYS.todo.all,
+    queryKey: QUERY_KEYS.todo.list,
     queryFn: fetchTodos,
   });
 }
