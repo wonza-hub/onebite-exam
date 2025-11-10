@@ -12,6 +12,7 @@ export function useUpdateTodoMutation() {
   return useMutation({
     mutationFn: updateTodo,
     onMutate: (updatedTodo) => {
+      const prevTodos = queryClient.getQueryData<ITodo[]>(QUERY_KEYS.todo.list);
       queryClient.setQueryData<ITodo[]>(QUERY_KEYS.todo.list, (prevTodos) => {
         if (!prevTodos) {
           return [];
@@ -23,6 +24,18 @@ export function useUpdateTodoMutation() {
             : prevTodo,
         );
       });
+
+      return {
+        prevTodos,
+      };
+    },
+    onError: (err, variable, context) => {
+      if (context && context.prevTodos) {
+        queryClient.setQueryData<ITodo[]>(
+          QUERY_KEYS.todo.list,
+          context.prevTodos,
+        );
+      }
     },
   });
 }
